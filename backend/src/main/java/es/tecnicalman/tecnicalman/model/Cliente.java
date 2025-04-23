@@ -1,5 +1,9 @@
 package es.tecnicalman.tecnicalman.model;
 
+import java.sql.Timestamp;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,12 +21,18 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
+
+    @CreationTimestamp
+    private Timestamp fechaCreacion;
+
     private String nombre;
+    private String nif;
     private String direccion;
     private String ciudad;
     private String codigoPostal;
     private String provincia;
-    private String nif;
+    private String pais;
+    private String email;
     private String telefono;
 
 }

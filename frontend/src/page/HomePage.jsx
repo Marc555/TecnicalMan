@@ -1,21 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import TopBar from "../components/TopBar"; // Asegúrate de que la ruta sea correcta
+import TopBar from "../components/TopBar";
+import { useAuth } from "../hooks/useAuth"; // Importamos el hook useAuth
 
 const HomePage = () => {
     const navigate = useNavigate();
-
-    const handleLogout = () => {
-        // Elimina el token del localStorage
-        localStorage.removeItem("token");
-
-        // Redirige al login
-        navigate("/login");
-    };
+    const { handleLogout } = useAuth(); // Obtenemos la función handleLogout del hook
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
-            <TopBar />
+            {/* Pasamos la función handleLogout al TopBar */}
+            <TopBar onLogout={handleLogout} />
             <div className="flex-grow flex flex-col items-center p-4">
                 <h1 className="text-black text-2xl font-bold mb-4">Bienvenido al Home</h1>
             </div>

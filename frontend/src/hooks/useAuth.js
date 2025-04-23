@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { login, validateToken } from "../axios/authApi";
+import { authApi } from "../axios/authApi";  // Cambiado para importar authApi
 import { getToken, setToken, removeToken } from "../utils/tokenUtils";
 import { useNavigate } from "react-router-dom";
 
@@ -14,11 +14,12 @@ export const useAuth = () => {
             const token = getToken();
             if (token) {
                 try {
-                    await validateToken(token);
+                    await authApi.validateToken(token);  // Usando authApi
                     setIsAuthenticated(true);
-                } catch {
+                } catch (err) {
                     removeToken();
                     setIsAuthenticated(false);
+                    setError(err.message);  // Capturar el mensaje de error
                 }
             }
             setLoading(false);
@@ -27,16 +28,32 @@ export const useAuth = () => {
     }, []);
 
     const handleLogin = async (email, password) => {
+        setLoading(true);
+        setError(null);
         try {
-            const token = await login(email, password);
+            const token = await authApi.login(email, password);  // Usando authApi
             setToken(token);
             setIsAuthenticated(true);
-            setError(null); // Limpiar el error en caso de login exitoso
             navigate('/home');
         } catch (err) {
             setError(err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
-    return { isAuthenticated, loading, handleLogin, error };
+    const handleLogout = () => {
+        removeToken();
+        setIsAuthenticated(false);
+        navigate('/login');
+        setError(null);
+    };
+
+    return {
+        isAuthenticated,
+        loading,
+        error,
+        handleLogin,
+        handleLogout  // Añadida función de logout
+    };
 };

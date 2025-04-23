@@ -1,10 +1,6 @@
 package es.tecnicalman.tecnicalman.model;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-
-import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,22 +15,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Tarea {
-    public enum EstadoTarea {
-        PENDIENTE, EN_PROGRESO, COMPLETADA, CANCELADA
+public class Factura {
+    public enum EstadoFactura {
+        BORRADOR, ACEPTADO, RECHAZADO
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Long idCliente;
     private String titulo;
-    private String descripcion;
-    private LocalDateTime fechaHora;
+    private String condiciones;
+    private Timestamp fechaEmitida;
+    private Timestamp fechaValidez;
 
     @Enumerated(EnumType.STRING)
-    private EstadoTarea estado;
-    private String direccion;
+    private EstadoFactura estado;
 
-    @CreationTimestamp
-    private Timestamp fechaCreacion;
 }
