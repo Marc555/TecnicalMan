@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lineas-presupuesto")
+@RequestMapping("/api/lineas-presupuesto")
 @RequiredArgsConstructor
 public class LineaPresupuestoController {
     private final LineaPresupuestoService lineaPresupuestoService;

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lineas-factura")
+@RequestMapping("/api/lineas-factura")
 @RequiredArgsConstructor
 public class LineaFacturaController {
     private final LineaFacturaService lineaFacturaService;

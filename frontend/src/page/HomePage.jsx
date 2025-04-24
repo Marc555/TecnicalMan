@@ -1,10 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import TopBar from "../components/TopBar";
 import { useAuth } from "../hooks/useAuth"; // Importamos el hook useAuth
 
 const HomePage = () => {
-    const navigate = useNavigate();
     const { handleLogout } = useAuth(); // Obtenemos la función handleLogout del hook
 
     return (

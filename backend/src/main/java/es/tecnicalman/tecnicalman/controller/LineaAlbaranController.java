@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lineas-albaran")
+@RequestMapping("/api/lineas-albaran")
 @RequiredArgsConstructor
 public class LineaAlbaranController {
     private final LineaAlbaranService lineaAlbaranService;
