@@ -6,12 +6,16 @@ import ClienteList from "../page/clientes/ClienteList";
 import ClienteDetail from "../page/clientes/ClienteDetail";
 import ClienteCreate from "../page/clientes/ClienteCreate";
 import ClienteEdit from "../page/clientes/ClienteEdit";
+import ForgotPasswordForm from "../components/ForgotPasswordForm.jsx";
+import ResetPasswordForm from "../components/ResetPasswordForm.jsx";
 
 const AppRouter = () => {
     return (
         <Router>
             <Routes>
                 <Route path="/login" element={<LoginForm />} />
+                <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+                <Route path="/reset-password" element={<ResetPasswordForm />} />
                 <Route
                     path="/home"
                     element={

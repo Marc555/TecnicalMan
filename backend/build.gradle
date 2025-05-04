@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.4.4'
+	id 'org.springframework.boot' version '3.4.5'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -30,6 +30,9 @@ dependencies {
 
     // Spring Security
     implementation("org.springframework.boot:spring-boot-starter-security")
+
+    // Spring Mail (para envío de correos)
+    implementation("org.springframework.boot:spring-boot-starter-mail")
 
     // JWT (Json Web Token)
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { Link } from "react-router-dom"; // Importar Link para navegación
 import logo from '../utils/img/logo.png';
 
 const LoginForm = () => {
@@ -39,9 +40,10 @@ const LoginForm = () => {
                         />
                     </div>
                     <div className="flex justify-end">
-                        <a href="#" className="text-sm text-blue-600 hover:text-blue-800">
+                        {/* Cambiar href por Link a la ruta de recuperación */}
+                        <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-800">
                             Recuperar contraseña
-                        </a>
+                        </Link>
                     </div>
                     <button
                         type="submit"

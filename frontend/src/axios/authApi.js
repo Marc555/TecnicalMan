@@ -1,13 +1,11 @@
-// authApi.js
-import api from "./apiBase"; // Asumo que apiBase.js ya tiene la configuración base de Axios
+import api from "./apiBase";
 
 export const authApi = {
     login: async (email, password) => {
         try {
             const response = await api.post("/auth/login", { email, password });
-            return response.data.token; // Devuelve solo el token
+            return response.data.token; 
         } catch (error) {
-            // Puedes manejar diferentes tipos de errores aquí
             if (error.response && error.response.status === 403) {
                 throw new Error("Credenciales incorrectas");
             }
@@ -20,12 +18,39 @@ export const authApi = {
             const response = await api.get("/auth/validate", {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            return response.data; // Devuelve la respuesta completa
+            return response.data; 
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 throw new Error("Token inválido o expirado");
             }
             throw new Error("Error al validar el token");
+        }
+    },
+
+    forgotPassword: async (email) => {
+        try {
+            const response = await api.post("/auth/forgot-password", { email });
+            return response.data.message; // Devuelve el mensaje de éxito
+        } catch (error) {
+            if (error.response && error.response.status === 404) {
+                throw new Error("Usuario no encontrado");
+            }
+            throw new Error("Error al enviar el correo de recuperación");
+        }
+    },
+
+    resetPassword: async (token, newPassword) => {
+        try {
+            const response = await api.post("/auth/reset-password", {
+                token,
+                password: newPassword,
+            });
+            return response.data.message; // Devuelve el mensaje de éxito
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                throw new Error("Token inválido o expirado");
+            }
+            throw new Error("Error al restablecer la contraseña");
         }
     },
 };
