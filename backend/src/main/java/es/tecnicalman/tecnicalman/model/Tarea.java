@@ -1,10 +1,12 @@
 package es.tecnicalman.tecnicalman.model;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,12 +26,22 @@ public class Tarea {
         PENDIENTE, EN_PROGRESO, COMPLETADA, CANCELADA
     }
 
+    public enum Encargado {
+        JAIME, PABLO, AMBOS
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
     private String descripcion;
-    private LocalDateTime fechaHora;
+
+    @Enumerated(EnumType.STRING)
+    private Encargado encargado;
+
+    @Column(name = "fecha_hora", columnDefinition = "TIMESTAMP")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private Timestamp fechaHora;
 
     @Enumerated(EnumType.STRING)
     private EstadoTarea estado;

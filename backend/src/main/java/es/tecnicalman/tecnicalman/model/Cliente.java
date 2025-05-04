@@ -25,14 +25,14 @@ public class Cliente {
     @CreationTimestamp
     private Timestamp fechaCreacion;
 
-    private String nombre; // 1
-    private String nif; // 2
-    private String direccion; // 1.5
+    private String nombre;
+    private String nif;
+    private String direccion;
     private String ciudad;
     private String codigoPostal;
     private String provincia;
     private String pais;
-    private String email; // 3
-    private String telefono; // 4
+    private String email;
+    private String telefono;
 
 }
