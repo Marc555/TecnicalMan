@@ -22,19 +22,31 @@ const Calendar = () => {
 
                 // Procesar las tareas para el calendario
                 const parsedEvents = tasks.map((task) => {
-                    const [year, month, day, hour, minute] = task.fechaHora;
-                    const startDate = new Date(year, month - 1, day, hour, minute);
+                    let startDate;
+
+                    // Manejar el formato de fecha
+                    if (typeof task.fechaHora === "string") {
+                        // Si es un string ISO, convertirlo directamente
+                        startDate = new Date(task.fechaHora);
+                    } else if (Array.isArray(task.fechaHora) && task.fechaHora.length === 5) {
+                        // Si es un array con [year, month, day, hour, minute]
+                        const [year, month, day, hour, minute] = task.fechaHora;
+                        startDate = new Date(year, month - 1, day, hour, minute);
+                    } else {
+                        console.warn("Formato de fecha incorrecto para la tarea:", task);
+                        return null; // Ignorar tareas con formato inválido
+                    }
 
                     return {
                         id: task.id,
-                        title: task.titulo,
-                        encargado: task.encargado,
-                        direccion: task.direccion,
-                        estado: task.estado,
+                        title: task.titulo || "Sin título",
+                        encargado: task.encargado || "No asignado",
+                        direccion: task.direccion || "Sin dirección",
+                        estado: task.estado || "PENDIENTE",
                         start: startDate,
                         color: task.estado === "COMPLETADA" ? "green" : "blue",
                     };
-                });
+                }).filter(event => event !== null); // Filtrar eventos nulos
 
                 console.log("Lista completa de tareas del calendario:", parsedEvents); // Registrar todas las tareas
                 setEvents(parsedEvents);
