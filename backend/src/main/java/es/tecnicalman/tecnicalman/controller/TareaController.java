@@ -5,7 +5,9 @@ import es.tecnicalman.tecnicalman.service.TareaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -28,7 +30,10 @@ public class TareaController {
     }
 
     @PostMapping
-    public ResponseEntity<Tarea> createTarea(@RequestBody Tarea tarea) {
+    public ResponseEntity<Tarea> createTarea(@Validated @RequestBody Tarea tarea) {
+        if (tarea.getFechaHora() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fecha y hora son requeridas");
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(tareaService.save(tarea));
     }
 

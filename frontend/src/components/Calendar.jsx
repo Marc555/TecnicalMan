@@ -2,64 +2,111 @@ import React, { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import esLocale from "@fullcalendar/core/locales/es"; // Idioma español
+import esLocale from "@fullcalendar/core/locales/es";
 import { tareaApi } from "../axios/tareaApi";
 import TaskModal from "./TaskModal";
-import TaskForm from "./TaskForm"; // Importar el formulario
+import TaskForm from "./TaskForm";
+
+const parseTaskDate = (dateValue) => {
+    if (!dateValue) return new Date();
+
+    if (typeof dateValue === "string") {
+        return new Date(dateValue);
+    }
+
+    if (Array.isArray(dateValue)) {
+        return new Date(
+            dateValue[0],
+            dateValue[1] - 1,
+            dateValue[2],
+            dateValue[3],
+            dateValue[4]
+        );
+    }
+
+    if (typeof dateValue === "number") {
+        // Intenta como segundos primero, luego como milisegundos
+        const dateFromSeconds = new Date(dateValue * 1000);
+        if (!isNaN(dateFromSeconds.getTime())) {
+            return dateFromSeconds;
+        }
+        return new Date(dateValue);
+    }
+
+    console.warn("Formato de fecha no soportado:", dateValue);
+    return new Date(); // Valor por defecto
+};
 
 const Calendar = () => {
     const [events, setEvents] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
     const [tasksForDay, setTasksForDay] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isFormOpen, setIsFormOpen] = useState(false); // Estado para mostrar el formulario
-    const [selectedTask, setSelectedTask] = useState(null); // Tarea seleccionada para editar
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [selectedTask, setSelectedTask] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const fetchTasks = async () => {
+        setIsLoading(true);
+        try {
+            const tasks = await tareaApi.getAll();
+
+            const parsedEvents = tasks.map((task) => {
+                const startDate = parseTaskDate(task.fechaHora);
+
+                if (isNaN(startDate.getTime())) {
+                    console.warn("Fecha inválida para la tarea:", task);
+                    return null;
+                }
+
+                return {
+                    id: task.id,
+                    title: task.titulo || "Sin título",
+                    encargado: task.encargado,
+                    direccion: task.direccion,
+                    estado: task.estado,
+                    start: startDate,
+                    color: task.estado === "COMPLETADA" ? "green" : "blue",
+                    extendedProps: {
+                        hora: startDate.toLocaleTimeString('es-ES', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false
+                        }),
+                        fechaCompleta: startDate.toLocaleString('es-ES', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })
+                    }
+                };
+            }).filter(event => event !== null);
+
+            setEvents(parsedEvents);
+
+            // Actualizar tareas del día seleccionado si existe
+            if (selectedDate) {
+                const updatedTasksForDay = parsedEvents.filter(event => {
+                    const eventDate = event.start.toISOString().split("T")[0];
+                    return eventDate === selectedDate;
+                });
+                setTasksForDay(updatedTasksForDay);
+            }
+        } catch (error) {
+            console.error("Error al obtener tareas:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const tasks = await tareaApi.getAll();
-
-                // Procesar las tareas para el calendario
-                const parsedEvents = tasks.map((task) => {
-                    let startDate;
-
-                    // Manejar el formato de fecha
-                    if (typeof task.fechaHora === "string") {
-                        // Si es un string ISO, convertirlo directamente
-                        startDate = new Date(task.fechaHora);
-                    } else if (Array.isArray(task.fechaHora) && task.fechaHora.length === 5) {
-                        // Si es un array con [year, month, day, hour, minute]
-                        const [year, month, day, hour, minute] = task.fechaHora;
-                        startDate = new Date(year, month - 1, day, hour, minute);
-                    } else {
-                        console.warn("Formato de fecha incorrecto para la tarea:", task);
-                        return null; // Ignorar tareas con formato inválido
-                    }
-
-                    return {
-                        id: task.id,
-                        title: task.titulo || "Sin título",
-                        encargado: task.encargado || "No asignado",
-                        direccion: task.direccion || "Sin dirección",
-                        estado: task.estado || "PENDIENTE",
-                        start: startDate,
-                        color: task.estado === "COMPLETADA" ? "green" : "blue",
-                    };
-                }).filter(event => event !== null); // Filtrar eventos nulos
-
-                console.log("Lista completa de tareas del calendario:", parsedEvents); // Registrar todas las tareas
-                setEvents(parsedEvents);
-            } catch (error) {
-                console.error("Error al obtener las tareas:", error.message);
-            }
-        };
-
         fetchTasks();
     }, []);
 
     const handleDateClick = (info) => {
-        const date = info.dateStr; // Fecha seleccionada
+        const date = info.dateStr;
         setSelectedDate(date);
 
         const tasksForSelectedDate = events.filter((event) => {
@@ -72,21 +119,19 @@ const Calendar = () => {
     };
 
     const handleEventClick = (info) => {
-        const clickedDate = info.event.start.toISOString().split("T")[0]; // Obtener la fecha del evento clicado
-
+        const clickedDate = info.event.start.toISOString().split("T")[0];
         const tasksForSelectedDate = events.filter((event) => {
             const eventDate = event.start.toISOString().split("T")[0];
-            return eventDate === clickedDate; // Filtrar todas las tareas del día
+            return eventDate === clickedDate;
         });
 
-        setSelectedDate(clickedDate); // Establecer la fecha seleccionada
-        setTasksForDay(tasksForSelectedDate); // Mostrar todas las tareas del día
-        setIsModalOpen(true); // Abrir el modal
+        setSelectedDate(clickedDate);
+        setTasksForDay(tasksForSelectedDate);
+        setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setTasksForDay([]);
     };
 
     const closeForm = () => {
@@ -94,31 +139,17 @@ const Calendar = () => {
         setSelectedTask(null);
     };
 
-    const handleSaveTask = (updatedTask) => {
-        // Actualizar la lista de eventos
-        setEvents((prevEvents) =>
-            updatedTask.id
-                ? prevEvents.map((event) =>
-                    event.id === updatedTask.id ? { ...event, ...updatedTask } : event
-                )
-                : [...prevEvents, updatedTask]
-        );
+    const handleSaveTask = async (taskData) => {
+        try {
+            await (taskData.id
+                ? tareaApi.update(taskData.id, taskData)
+                : tareaApi.create(taskData));
 
-        // Si la tarea editada pertenece a la fecha seleccionada, actualizar tasksForDay
-        if (
-            updatedTask.start &&
-            updatedTask.start.toISOString().split("T")[0] === selectedDate
-        ) {
-            setTasksForDay((prevTasks) =>
-                updatedTask.id
-                    ? prevTasks.map((task) =>
-                        task.id === updatedTask.id ? { ...task, ...updatedTask } : task
-                    )
-                    : [...prevTasks, updatedTask]
-            );
+            await fetchTasks();
+            closeForm();
+        } catch (error) {
+            console.error("Error al guardar:", error);
         }
-
-        closeForm(); // Cerrar el formulario
     };
 
     return (
@@ -127,30 +158,42 @@ const Calendar = () => {
                 <h1 className="text-3xl font-bold">Calendario de Tareas</h1>
                 <button
                     onClick={() => {
-                        setSelectedTask(null); // Crear nueva tarea
+                        setSelectedTask(null);
                         setIsFormOpen(true);
                     }}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    disabled={isLoading}
                 >
-                    Añadir Nueva Tarea
+                    {isLoading ? "Cargando..." : "Añadir Nueva Tarea"}
                 </button>
             </div>
-            <div className="calendar-container">
-                <FullCalendar
-                    plugins={[dayGridPlugin, interactionPlugin]}
-                    initialView="dayGridMonth"
-                    events={events}
-                    locales={[esLocale]}
-                    locale="es"
-                    dateClick={handleDateClick}
-                    eventClick={handleEventClick}
-                    height="auto"
-                    contentHeight="auto"
-                />
-            </div>
+
+            {isLoading ? (
+                <div className="text-center py-8">Cargando calendario...</div>
+            ) : (
+                <div className="calendar-container">
+                    <FullCalendar
+                        plugins={[dayGridPlugin, interactionPlugin]}
+                        initialView="dayGridMonth"
+                        events={events}
+                        locales={[esLocale]}
+                        locale="es"
+                        dateClick={handleDateClick}
+                        eventClick={handleEventClick}
+                        height="auto"
+                        contentHeight="auto"
+                        eventTimeFormat={{
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false
+                        }}
+                    />
+                </div>
+            )}
 
             {isModalOpen && (
                 <TaskModal
+                    key={selectedDate} // Fuerza recreación al cambiar fecha
                     date={selectedDate}
                     tasks={tasksForDay}
                     onClose={closeModal}
@@ -158,12 +201,13 @@ const Calendar = () => {
                         setSelectedTask(task);
                         setIsFormOpen(true);
                     }}
+                    refreshData={fetchTasks}
                 />
             )}
 
             {isFormOpen && (
                 <TaskForm
-                    task={selectedTask} // Pasar la tarea seleccionada al formulario
+                    task={selectedTask}
                     onClose={closeForm}
                     onSave={handleSaveTask}
                 />

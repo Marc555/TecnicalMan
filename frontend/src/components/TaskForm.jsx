@@ -1,38 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const TaskForm = ({ task, onClose, onSave }) => {
-    const [titulo, setTitulo] = useState(task?.title || "");
-    const [encargado, setEncargado] = useState(task?.encargado || "AMBOS");
-    const [direccion, setDireccion] = useState(task?.direccion || "");
-    const [estado, setEstado] = useState(task?.estado || "PENDIENTE");
-    const [fechaHora, setFechaHora] = useState(
-        task?.start ? new Date(task.start).toISOString().substring(0, 16) : ""
-    );
+    const [titulo, setTitulo] = useState("");
+    const [encargado, setEncargado] = useState("AMBOS");
+    const [direccion, setDireccion] = useState("");
+    const [estado, setEstado] = useState("PENDIENTE");
+    const [fechaHora, setFechaHora] = useState("");
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        if (task) {
+            // Inicializar los valores de la tarea
+            setTitulo(task.titulo || task.title || "");
+            setEncargado(task.encargado || "AMBOS");
+            setDireccion(task.direccion || "");
+            setEstado(task.estado || "PENDIENTE");
+
+            // Formatear la fecha/hora al formato requerido por datetime-local y sumar 2 horas
+            if (task.fechaHora || task.start) {
+                const date = new Date(task.fechaHora || task.start);
+
+                // Sumar 2 horas manualmente
+                date.setHours(date.getHours() + 2);
+
+                const formattedDate = date.toISOString().slice(0, 16); // Extraer yyyy-MM-ddThh:mm
+                setFechaHora(formattedDate);
+            } else {
+                setFechaHora("");
+            }
+        }
+    }, [task]);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const updatedTask = {
-            ...task,
-            title: titulo,
+
+        // Asumir que fechaHora ya está en UTC o en el formato correcto
+        const fechaUTC = new Date(fechaHora);
+
+        const taskData = {
+            ...(task || {}),
+            titulo,
             encargado,
             direccion,
             estado,
-            start: new Date(fechaHora),
+            fechaHora: fechaUTC.toISOString()
         };
-        onSave(updatedTask);
+
+        try {
+            await onSave(taskData);
+        } catch (error) {
+            console.error("Error al guardar:", error);
+        }
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white text-black rounded-lg p-6 w-full max-w-md"
-            >
+            <form onSubmit={handleSubmit} className="bg-white text-black rounded-lg p-6 w-full max-w-md">
                 <h2 className="text-2xl font-bold mb-4">
-                    {task ? "Editar Tarea" : "Crear Nueva Tarea"}
+                    {task?.id ? "Editar Tarea" : "Crear Nueva Tarea"}
                 </h2>
+
                 <div className="mb-4">
-                    <label className="block mb-2">Título</label>
+                    <label className="block mb-2">Título *</label>
                     <input
                         type="text"
                         value={titulo}
@@ -41,18 +69,21 @@ const TaskForm = ({ task, onClose, onSave }) => {
                         required
                     />
                 </div>
+
                 <div className="mb-4">
-                    <label className="block mb-2">Encargado</label>
+                    <label className="block mb-2">Encargado *</label>
                     <select
                         value={encargado}
                         onChange={(e) => setEncargado(e.target.value)}
                         className="w-full p-2 border rounded"
+                        required
                     >
                         <option value="JAIME">Jaime</option>
                         <option value="PABLO">Pablo</option>
                         <option value="AMBOS">Ambos</option>
                     </select>
                 </div>
+
                 <div className="mb-4">
                     <label className="block mb-2">Dirección</label>
                     <input
@@ -62,12 +93,14 @@ const TaskForm = ({ task, onClose, onSave }) => {
                         className="w-full p-2 border rounded"
                     />
                 </div>
+
                 <div className="mb-4">
-                    <label className="block mb-2">Estado</label>
+                    <label className="block mb-2">Estado *</label>
                     <select
                         value={estado}
                         onChange={(e) => setEstado(e.target.value)}
                         className="w-full p-2 border rounded"
+                        required
                     >
                         <option value="PENDIENTE">Pendiente</option>
                         <option value="EN_PROGRESO">En Progreso</option>
@@ -75,8 +108,9 @@ const TaskForm = ({ task, onClose, onSave }) => {
                         <option value="CANCELADA">Cancelada</option>
                     </select>
                 </div>
+
                 <div className="mb-4">
-                    <label className="block mb-2">Fecha y Hora</label>
+                    <label className="block mb-2">Fecha y Hora *</label>
                     <input
                         type="datetime-local"
                         value={fechaHora}
@@ -85,19 +119,20 @@ const TaskForm = ({ task, onClose, onSave }) => {
                         required
                     />
                 </div>
-                <div className="flex justify-end">
+
+                <div className="flex justify-end gap-2">
                     <button
                         type="button"
                         onClick={onClose}
-                        className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+                        className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
                     >
                         Cancelar
                     </button>
                     <button
                         type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                     >
-                        Guardar
+                        {task?.id ? "Actualizar" : "Crear"}
                     </button>
                 </div>
             </form>
