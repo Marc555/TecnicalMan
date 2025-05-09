@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const TaskForm = ({ task, onClose, onSave }) => {
     const [titulo, setTitulo] = useState("");
+    const [descripcion, setDescripcion] = useState("");
     const [encargado, setEncargado] = useState("AMBOS");
     const [direccion, setDireccion] = useState("");
     const [estado, setEstado] = useState("PENDIENTE");
@@ -11,6 +12,7 @@ const TaskForm = ({ task, onClose, onSave }) => {
         if (task) {
             // Inicializar los valores de la tarea
             setTitulo(task.titulo || task.title || "");
+            setDescripcion(task.descripcion || "");
             setEncargado(task.encargado || "AMBOS");
             setDireccion(task.direccion || "");
             setEstado(task.estado || "PENDIENTE");
@@ -39,6 +41,7 @@ const TaskForm = ({ task, onClose, onSave }) => {
         const taskData = {
             ...(task || {}),
             titulo,
+            descripcion,
             encargado,
             direccion,
             estado,
@@ -67,6 +70,16 @@ const TaskForm = ({ task, onClose, onSave }) => {
                         onChange={(e) => setTitulo(e.target.value)}
                         className="w-full p-2 border rounded"
                         required
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label className="block mb-2">Descripcion</label>
+                    <input
+                        type="text"
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                        className="w-full p-2 border rounded"
                     />
                 </div>
 

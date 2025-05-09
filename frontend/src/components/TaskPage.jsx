@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Calendar from "../components/Calendar";
+import Calendar from "../page/Calendar";
 import TaskForm from "../components/TaskForm";
 import { tareaApi } from "../axios/tareaApi";
 

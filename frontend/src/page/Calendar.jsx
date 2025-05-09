@@ -4,8 +4,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import esLocale from "@fullcalendar/core/locales/es";
 import { tareaApi } from "../axios/tareaApi";
-import TaskModal from "./TaskModal";
-import TaskForm from "./TaskForm";
+import TaskModal from "../components/TaskModal";
+import TaskForm from "../components/TaskForm";
 
 const parseTaskDate = (dateValue) => {
     if (!dateValue) return new Date();
@@ -62,6 +62,7 @@ const Calendar = () => {
                 return {
                     id: task.id,
                     title: task.titulo || "Sin título",
+                    descripcion: task.descripcion,
                     encargado: task.encargado,
                     direccion: task.direccion,
                     estado: task.estado,

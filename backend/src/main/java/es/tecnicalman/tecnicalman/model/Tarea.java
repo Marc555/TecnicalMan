@@ -16,14 +16,23 @@ import java.time.Instant;
 @AllArgsConstructor
 @Entity
 public class Tarea {
+    public enum EstadoTarea {
+        PENDIENTE, EN_PROGRESO, COMPLETADA, CANCELADA
+    }
+
+    public enum Encargado {
+        JAIME, PABLO, AMBOS
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String titulo;
-    private String encargado;
+    private String descripcion;
+    private Encargado encargado;
     private String direccion;
-    private String estado;
+    private EstadoTarea estado;
 
     @Column(columnDefinition = "TIMESTAMP")
     private Instant fechaHora; // Usar Instant para mejor manejo de fechas
