@@ -32,10 +32,10 @@ const TaskModal = ({ date, tasks, onClose, onEditTask, refreshData }) => {
                                 <div className="flex justify-between items-start">
                                     <div>
                                         <h3 className="font-bold">{task.title}</h3>
+                                        <p className="text-sm">{task.encargado}</p>
                                         <p className="text-sm text-gray-600">
                                             {task.extendedProps?.hora || '--:--'}
                                         </p>
-                                        <p className="text-sm">{task.direccion}</p>
                                         <span className={`inline-block px-2 py-1 text-xs rounded ${task.estado === 'COMPLETADA'
                                             ? 'bg-green-100 text-green-800'
                                             : task.estado === 'PENDIENTE'
@@ -44,6 +44,8 @@ const TaskModal = ({ date, tasks, onClose, onEditTask, refreshData }) => {
                                             }`}>
                                             {task.estado}
                                         </span>
+                                        <p className="text-sm">{task.direccion}</p>
+                                        <p className="text-sm">{task.descripcion}</p>
                                     </div>
                                     <div className="flex space-x-2">
                                         <button

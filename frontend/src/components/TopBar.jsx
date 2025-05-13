@@ -11,6 +11,12 @@ const TopBar = () => {
             <div className="container mx-auto px-4">
                 <div className="flex justify-center items-center space-x-6">
                     <button
+                        onClick={() => navigate('/home')} // Navegación real en lugar de console.log
+                        className="text-white hover:text-gray-300 transition-colors"
+                    >
+                        Home
+                    </button>
+                    <button
                         onClick={() => navigate('/clientes')} // Navegación real en lugar de console.log
                         className="text-white hover:text-gray-300 transition-colors"
                     >
