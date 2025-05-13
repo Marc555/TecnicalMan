@@ -21,7 +21,7 @@ public class AlbaranController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Albaran> getAlbaranById(@PathVariable Long id) {
+    public ResponseEntity<Albaran> getAlbaranById(@PathVariable("id") Long id) {
         return albaranService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -33,12 +33,12 @@ public class AlbaranController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Albaran> updateAlbaran(@PathVariable Long id, @RequestBody Albaran albaran) {
+    public ResponseEntity<Albaran> updateAlbaran(@PathVariable("id") Long id, @RequestBody Albaran albaran) {
         return ResponseEntity.ok(albaranService.update(id, albaran));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAlbaran(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAlbaran(@PathVariable("id") Long id) {
         albaranService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

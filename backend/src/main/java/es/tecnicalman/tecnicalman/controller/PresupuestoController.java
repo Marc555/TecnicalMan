@@ -21,7 +21,7 @@ public class PresupuestoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Presupuesto> getPresupuestoById(@PathVariable Long id) {
+    public ResponseEntity<Presupuesto> getPresupuestoById(@PathVariable("id") Long id) {
         return presupuestoService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -33,12 +33,13 @@ public class PresupuestoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Presupuesto> updatePresupuesto(@PathVariable Long id, @RequestBody Presupuesto presupuesto) {
+    public ResponseEntity<Presupuesto> updatePresupuesto(@PathVariable("id") Long id,
+            @RequestBody Presupuesto presupuesto) {
         return ResponseEntity.ok(presupuestoService.update(id, presupuesto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePresupuesto(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePresupuesto(@PathVariable("id") Long id) {
         presupuestoService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

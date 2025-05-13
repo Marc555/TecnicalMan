@@ -21,7 +21,7 @@ public class LineaAlbaranController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LineaAlbaran> getLineaAlbaranById(@PathVariable Long id) {
+    public ResponseEntity<LineaAlbaran> getLineaAlbaranById(@PathVariable("id") Long id) {
         return lineaAlbaranService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -33,13 +33,13 @@ public class LineaAlbaranController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LineaAlbaran> updateLineaAlbaran(@PathVariable Long id,
+    public ResponseEntity<LineaAlbaran> updateLineaAlbaran(@PathVariable("id") Long id,
             @RequestBody LineaAlbaran lineaAlbaran) {
         return ResponseEntity.ok(lineaAlbaranService.update(id, lineaAlbaran));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLineaAlbaran(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteLineaAlbaran(@PathVariable("id") Long id) {
         lineaAlbaranService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

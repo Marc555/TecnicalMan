@@ -21,7 +21,7 @@ public class LineaFacturaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LineaFactura> getLineaFacturaById(@PathVariable Long id) {
+    public ResponseEntity<LineaFactura> getLineaFacturaById(@PathVariable("id") Long id) {
         return lineaFacturaService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -33,13 +33,13 @@ public class LineaFacturaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LineaFactura> updateLineaFactura(@PathVariable Long id,
+    public ResponseEntity<LineaFactura> updateLineaFactura(@PathVariable("id") Long id,
             @RequestBody LineaFactura lineaFactura) {
         return ResponseEntity.ok(lineaFacturaService.update(id, lineaFactura));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLineaFactura(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteLineaFactura(@PathVariable("id") Long id) {
         lineaFacturaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

@@ -23,7 +23,7 @@ public class TareaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tarea> getTareaById(@PathVariable Long id) {
+    public ResponseEntity<Tarea> getTareaById(@PathVariable("id") Long id) {
         return tareaService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -38,12 +38,12 @@ public class TareaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tarea> updateTarea(@PathVariable Long id, @RequestBody Tarea tarea) {
+    public ResponseEntity<Tarea> updateTarea(@PathVariable("id") Long id, @RequestBody Tarea tarea) {
         return ResponseEntity.ok(tareaService.update(id, tarea));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTarea(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTarea(@PathVariable("id") Long id) {
         tareaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

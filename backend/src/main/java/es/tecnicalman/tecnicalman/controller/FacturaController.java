@@ -21,7 +21,7 @@ public class FacturaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Factura> getFacturaById(@PathVariable Long id) {
+    public ResponseEntity<Factura> getFacturaById(@PathVariable("id") Long id) {
         return facturaService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -33,12 +33,12 @@ public class FacturaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Factura> updateFactura(@PathVariable Long id, @RequestBody Factura factura) {
+    public ResponseEntity<Factura> updateFactura(@PathVariable("id") Long id, @RequestBody Factura factura) {
         return ResponseEntity.ok(facturaService.update(id, factura));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFactura(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFactura(@PathVariable("id") Long id) {
         facturaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
