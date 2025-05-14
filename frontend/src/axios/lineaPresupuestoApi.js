@@ -22,6 +22,16 @@ export const lineaPresupuestoApi = {
         }
     },
 
+    getByPresupuestoId: async (idPresupuesto) => {
+        try {
+            const allLineas = await lineaPresupuestoApi.getAll();
+            return allLineas.filter((linea) => linea.idPresupuesto === idPresupuesto);
+        } catch (error) {
+            console.error('Error al filtrar las líneas de presupuesto:', error.message);
+            throw error;
+        }
+    },
+
     create: async (lineaPresupuesto) => {
         try {
             const response = await api.post("/lineas-presupuesto", lineaPresupuesto);
