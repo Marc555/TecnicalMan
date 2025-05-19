@@ -68,7 +68,6 @@ const ClienteEdit = () => {
     const validate = () => {
         const newErrors = {};
         if (!formData.nombre.trim()) newErrors.nombre = 'Nombre es requerido';
-        if (!formData.nif.trim()) newErrors.nif = 'NIF es requerido';
         return newErrors;
     };
 
@@ -138,7 +137,7 @@ const ClienteEdit = () => {
 
                                 <div>
                                     <label htmlFor="nif" className="block text-sm font-medium text-gray-700 mb-1">
-                                        NIF <span className="text-red-500">*</span>
+                                        NIF
                                     </label>
                                     <input
                                         type="text"
