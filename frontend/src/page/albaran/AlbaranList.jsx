@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import TopBar from "../../components/TopBar";
 import { useAuth } from "../../hooks/useAuth";
 import { albaranApi } from "../../axios/albaranApi";
-import { lineaAlbaranApi } from "../../axios/lineaAlbaranApi"; // Importar API de líneas de albarán
+import { lineaAlbaranApi } from "../../axios/lineaAlbaranApi";
+import { albaranPdfApi } from "../../axios/albaranPdfApi"; // <-- IMPORTA LA API DEL PDF
+import { saveAs } from "file-saver"; // <-- ASEGÚRATE DE TENER INSTALADO 'file-saver'
 
 const AlbaranList = () => {
     const { handleLogout } = useAuth();
@@ -98,6 +100,19 @@ const AlbaranList = () => {
         navigate(`/albaranes/editar/${id}`);
     };
 
+    const handleDownloadPdf = async (id, e) => {
+        e.stopPropagation();
+        try {
+            const blob = await albaranPdfApi.getPdf(id);
+            saveAs(
+                new Blob([blob], { type: "application/pdf" }),
+                `albaran_ALB${id.toString().padStart(4, '0')}.pdf`
+            );
+        } catch (error) {
+            setError("No se pudo descargar el PDF del albarán.");
+        }
+    };
+
     const handleRowClick = (id, e) => {
         if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
             return;
@@ -182,6 +197,13 @@ const AlbaranList = () => {
                                         className="ml-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm"
                                     >
                                         Editar
+                                    </button>
+                                    <button
+                                        onClick={(e) => handleDownloadPdf(albaran.id, e)}
+                                        className="ml-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm"
+                                        title="Descargar PDF"
+                                    >
+                                        PDF
                                     </button>
                                 </div>
                             </div>

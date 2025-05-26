@@ -4,6 +4,8 @@ import TopBar from "../../components/TopBar";
 import { useAuth } from "../../hooks/useAuth";
 import { presupuestoApi } from '../../axios/presupuestoApi';
 import { lineaPresupuestoApi } from '../../axios/lineaPresupuestoApi';
+import { presupuestoPdfApi } from '../../axios/presupuestoPdfApi';
+import { saveAs } from "file-saver"; // <-- Añade esta línea
 
 const PresupuestoList = () => {
     const { handleLogout } = useAuth();
@@ -16,6 +18,7 @@ const PresupuestoList = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [presupuestoToDelete, setPresupuestoToDelete] = useState(null);
+    const [downloadingPdfId, setDownloadingPdfId] = useState(null);
 
     useEffect(() => {
         const fetchPresupuestos = async () => {
@@ -100,6 +103,22 @@ const PresupuestoList = () => {
         navigate(`/presupuestos/${id}`);
     };
 
+    const handleDownloadPdf = async (id, e) => {
+        e.stopPropagation();
+        setDownloadingPdfId(id);
+        try {
+            const pdfBlob = await presupuestoPdfApi.getPdf(id);
+            saveAs(
+                new Blob([pdfBlob], { type: "application/pdf" }),
+                `presupuesto_PPTO${id.toString().padStart(4, '0')}.pdf`
+            );
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setDownloadingPdfId(null);
+        }
+    };
+
     if (loading) return <div className="p-4 text-gray-800">Cargando presupuestos...</div>;
     if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
 
@@ -168,7 +187,7 @@ const PresupuestoList = () => {
                                 <div className="col-span-2 flex">
                                     <button
                                         onClick={(e) => handleDeleteClick(presupuesto.id, e)}
-                                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm"
+                                        className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm"
                                     >
                                         Eliminar
                                     </button>
@@ -177,6 +196,13 @@ const PresupuestoList = () => {
                                         className="ml-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm"
                                     >
                                         Editar
+                                    </button>
+                                    <button
+                                        onClick={(e) => handleDownloadPdf(presupuesto.id, e)}
+                                        className="ml-2 px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-700 transition-colors text-sm"
+                                        disabled={downloadingPdfId === presupuesto.id}
+                                    >
+                                        {downloadingPdfId === presupuesto.id ? "Descargando..." : "PDF"}
                                     </button>
                                 </div>
                             </div>

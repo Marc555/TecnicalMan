@@ -52,6 +52,10 @@ dependencies {
     // Base de datos
     implementation("mysql:mysql-connector-java:8.0.33")
 
+    // PDF - iText 7 Core (AGPL)
+    implementation("com.itextpdf:itext7-core:7.2.5")
+    // Opcional: para pdfa, html2pdf, etc, puedes agregar más módulos de iText si lo necesitas
+
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

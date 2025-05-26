@@ -4,6 +4,8 @@ import TopBar from "../../components/TopBar";
 import { useAuth } from "../../hooks/useAuth";
 import { facturaApi } from "../../axios/facturaApi";
 import { lineaFacturaApi } from "../../axios/lineaFacturaApi";
+import { facturaPdfApi } from "../../axios/facturaPdfApi"; // <--- NUEVO
+import { saveAs } from "file-saver"; // <--- NUEVO
 
 const FacturaList = () => {
     const { handleLogout } = useAuth();
@@ -16,6 +18,7 @@ const FacturaList = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [facturaToDelete, setFacturaToDelete] = useState(null);
+    const [downloadingPdfId, setDownloadingPdfId] = useState(null);
 
     useEffect(() => {
         const fetchFacturas = async () => {
@@ -98,6 +101,22 @@ const FacturaList = () => {
         navigate(`/facturas/editar/${id}`);
     };
 
+    const handleDownloadPdf = async (id, e) => {
+        e.stopPropagation();
+        setDownloadingPdfId(id);
+        try {
+            const pdfBlob = await facturaPdfApi.getPdf(id);
+            saveAs(
+                new Blob([pdfBlob], { type: "application/pdf" }),
+                `factura_FAC${id.toString().padStart(4, '0')}.pdf`
+            );
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setDownloadingPdfId(null);
+        }
+    };
+
     const handleRowClick = (id, e) => {
         if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
             return;
@@ -173,7 +192,7 @@ const FacturaList = () => {
                                 <div className="col-span-2 flex">
                                     <button
                                         onClick={(e) => handleDeleteClick(factura.id, e)}
-                                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm"
+                                        className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm"
                                     >
                                         Eliminar
                                     </button>
@@ -182,6 +201,13 @@ const FacturaList = () => {
                                         className="ml-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm"
                                     >
                                         Editar
+                                    </button>
+                                    <button
+                                        onClick={(e) => handleDownloadPdf(factura.id, e)}
+                                        className="ml-2 px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-800 transition-colors text-sm"
+                                        disabled={downloadingPdfId === factura.id}
+                                    >
+                                        {downloadingPdfId === factura.id ? "Descargando..." : "PDF"}
                                     </button>
                                 </div>
                             </div>
