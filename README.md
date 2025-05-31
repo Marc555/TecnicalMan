@@ -78,12 +78,10 @@ TecnicalMan/
 
 ## Millores
 
-- Mejoras de la sincronización offline/online en la app móvil.
+- Mejora en el aspecto de los PDF para igualar el estilo usado actualmente por el cliente.
 - Optimización de la descarga y generación de PDFs.
-- Actualización de dependencias y frameworks a versiones recientes.
-- Mejoras de seguridad en la autenticación y almacenamiento de tokens.
-- Optimización de búsquedas y filtrados en la web.
-- Nuevos tests automatizados en backend y frontend.
+- Adición de ordenado y filtrado por categorías en web y móvil.
+- Adición de gráficos para las ganancias mensuales y trimestrales.
 - Mejoras de usabilidad y accesibilidad en la UI web y móvil.
 
 ---
@@ -113,7 +111,7 @@ TecnicalMan/
 - CRUD de tareas, clientes, presupuestos, albaranes y facturas.
 - Visualización de calendario con tareas diarias.
 - Descarga de PDFs al almacenamiento externo privado.
-- Soporte completo offline con sincronización cuando hay red disponible.
+- Soporte de visualizacion completo offline de las tareas del dia.
 - UI moderna con Jetpack Compose y Material 3.
 
 ---
