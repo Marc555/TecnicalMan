@@ -153,3 +153,5 @@ npm run dev
 - Asegúrate de tener habilitado Lombok en tu IDE para el backend.
 - La sincronización en la app móvil gestiona automáticamente el modo offline/online.
 - Spring Boot DevTools puede usarse para recarga automática en desarrollo.
+
+- ## [Video Comercial](https://drive.google.com/file/d/1GienqLiMsf8Jg4bT0woJAJN5EZGOx1hh/view?usp=sharing)
