@@ -4,9 +4,26 @@ TecnicalMan es una solución de gestión para empresas disponible como aplicaci�
 
 ---
 
-## Tecnologías utilizadas
+## Funcionalitats
 
-### Backend
+- Login obligatorio en todas las plataformas para acceder al sistema.
+- Recuperación de contraseña mediante correo electrónico.
+- CRUD de clientes, que pueden ser personas, comunidades o gestorías.
+- CRUD de tareas.
+- Calendario de tareas para visualización diaria.
+- CRUD de presupuestos.
+- CRUD de albaranes.
+- CRUD de facturas.
+- Generación de PDFs para presupuestos, albaranes y facturas.
+- Soporte offline en la app móvil: persistencia local y visualización de tareas del día.
+
+---
+
+## Arquitectura
+
+### Tecnologías utilizadas
+
+#### Backend
 
 - **Lenguajes:** Java 21
 - **Frameworks:** Spring Boot, Spring Security, Spring Data JPA
@@ -14,13 +31,13 @@ TecnicalMan es una solución de gestión para empresas disponible como aplicaci�
 - **Base de datos:** MySQL
 - **Otros:** Lombok, iText PDF, Swagger (OpenAPI)
 
-### Frontend Web
+#### Frontend Web
 
 - **Lenguajes:** JavaScript, TypeScript
 - **Frameworks y librerías:** React, Vite, Axios, Tailwind CSS
 - **Gestión de rutas y estado:** React Router, useState, useEffect, Context
 
-### Aplicación Android
+#### Aplicación Android
 
 - **Lenguajes:** Kotlin, Java
 - **Frameworks y librerías:** Jetpack Compose, Room, Retrofit, DataStore, Navigation Compose
@@ -29,7 +46,7 @@ TecnicalMan es una solución de gestión para empresas disponible como aplicaci�
 
 ---
 
-## Estructura del proyecto
+### Estructura del proyecto
 
 ```bash
 TecnicalMan/
@@ -59,18 +76,15 @@ TecnicalMan/
 
 ---
 
-## Requisitos funcionales
+## Millores
 
-- Login obligatorio en todas las plataformas para acceder al sistema.
-- Recuperación de contraseña mediante correo electrónico.
-- CRUD de clientes, que pueden ser personas, comunidades o gestorías.
-- CRUD de tareas.
-- Calendario de tareas para visualización diaria.
-- CRUD de presupuestos.
-- CRUD de albaranes.
-- CRUD de facturas.
-- Generación de PDFs para presupuestos, albaranes y facturas.
-- Soporte offline en la app móvil: persistencia local y visualización de tareas del día.
+- Mejoras de la sincronización offline/online en la app móvil.
+- Optimización de la descarga y generación de PDFs.
+- Actualización de dependencias y frameworks a versiones recientes.
+- Mejoras de seguridad en la autenticación y almacenamiento de tokens.
+- Optimización de búsquedas y filtrados en la web.
+- Nuevos tests automatizados en backend y frontend.
+- Mejoras de usabilidad y accesibilidad en la UI web y móvil.
 
 ---
 
