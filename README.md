@@ -1,141 +1,157 @@
 # TecnicalMan
 
-TecnicalMan es una aplicación de gestión para empresas, desarrollada con **Spring Boot** en el backend y **React** en el frontend. Permite la gestión de clientes, facturas, albaranes, presupuestos y tareas.
+TecnicalMan es una solución de gestión para empresas disponible como aplicación Android y WebApp. Permite gestionar clientes, tareas, presupuestos, albaranes y facturas, tanto online como offline, con sincronización en red.
 
 ---
 
-## Estructura del Proyecto
+## Funcionalitats
 
-```
+- Login obligatorio en todas las plataformas para acceder al sistema.
+- Recuperación de contraseña mediante correo electrónico.
+- CRUD de clientes, que pueden ser personas, comunidades o gestorías.
+- CRUD de tareas.
+- Calendario de tareas para visualización diaria.
+- CRUD de presupuestos.
+- CRUD de albaranes.
+- CRUD de facturas.
+- Generación de PDFs para presupuestos, albaranes y facturas.
+- Soporte offline en la app móvil: persistencia local y visualización de tareas del día.
+
+---
+
+## Arquitectura
+
+### Tecnologías utilizadas
+
+#### Backend
+
+- **Lenguajes:** Java 21
+- **Frameworks:** Spring Boot, Spring Security, Spring Data JPA
+- **Seguridad:** JWT, BCrypt
+- **Base de datos:** MySQL
+- **Otros:** Lombok, iText PDF, Swagger (OpenAPI)
+
+#### Frontend Web
+
+- **Lenguajes:** JavaScript, TypeScript
+- **Frameworks y librerías:** React, Vite, Axios, Tailwind CSS
+- **Gestión de rutas y estado:** React Router, useState, useEffect, Context
+
+#### Aplicación Android
+
+- **Lenguajes:** Kotlin, Java
+- **Frameworks y librerías:** Jetpack Compose, Room, Retrofit, DataStore, Navigation Compose
+- **Arquitectura:** MVVM
+- **Gestión de estado:** StateFlow
+
+---
+
+### Estructura del proyecto
+
+```bash
 TecnicalMan/
 │
-├── backend/      # Backend Java Spring Boot
-│   ├── src/
-│   │   └── main/java/es/tecnicalman/tecnicalman/
-│   │       ├── controller/   # Controladores REST
-│   │       ├── model/        # Entidades JPA
-│   │       ├── repository/   # Repositorios Spring Data JPA
-│   │       ├── service/      # Lógica de negocio
-│   │       └── security/     # Seguridad y JWT
-│   ├── build.gradle
-│   └── ...
+├── backend/        # Spring Boot
+│   └── src/main/java/es/tecnicalman/tecnicalman/
+│       ├── controller/   # REST Controllers
+│       ├── model/        # Entidades JPA
+│       ├── repository/   # Spring Data JPA
+│       ├── service/      # Lógica de negocio
+│       └── security/     # JWT, filtros, configuración
 │
-└── frontend/     # Frontend React + Vite
-    ├── src/
-    │   ├── page/         # Vistas principales (clientes, facturas, etc.)
-    │   ├── axios/        # Llamadas a la API
-    │   ├── components/   # Componentes reutilizables
-    │   └── ...
-    ├── package.json
-    └── ...
+├── frontend/       # React + Vite
+│   └── src/
+│       ├── page/         # Vistas principales
+│       ├── axios/        # Conexión con la API
+│       ├── components/   # Componentes reutilizables
+│
+└── androidApp/     # App Android (Jetpack Compose)
+    ├── MainActivity.kt
+    ├── viewmodel/
+    ├── model/
+    ├── repository/
+    ├── api/
+    └── utils/
 ```
 
 ---
 
-## Backend
+## Millores
 
-- **Tecnologías:** Java 21, Spring Boot, Spring Data JPA, Spring Security, JWT, MySQL, Lombok, iText PDF.
-- **Punto de entrada:** [`TecnicalmanApplication.java`](backend/src/main/java/es/tecnicalman/tecnicalman/TecnicalmanApplication.java)
-- **Estructura principal:**
-  - `controller/`: Controladores REST para recursos como Cliente, Factura, Albaran, Presupuesto, Tarea, etc.
-  - `model/`: Entidades JPA (por ejemplo, Cliente, Factura, LineaFactura, etc.).
-  - `repository/`: Interfaces de acceso a datos (extienden JpaRepository).
-  - `service/`: Lógica de negocio y servicios.
-  - `security/`: Configuración de seguridad, JWT, filtros y utilidades.
-
-### Endpoints REST principales
-
-- `/api/clientes`
-- `/api/facturas`
-- `/api/albarans`
-- `/api/presupuestos`
-- `/api/tareas`
-- `/api/auth` (login, validación, recuperación de contraseña)
-
-### Seguridad
-
-- **Spring Security** con JWT.
-- Endpoints bajo `/api/auth` son públicos, el resto requieren autenticación.
-- Contraseñas cifradas con BCrypt.
-
-### Documentación de la API con Swagger
-
-La documentación interactiva de la API está disponible gracias a **Swagger** (OpenAPI).  
-Para acceder a la documentación, una vez levantada la aplicación, visita:
-
-```
-http://localhost:8080/swagger-ui/index.html
-```
-
-#### Instalación de Swagger
-
-Asegúrate de tener en tu `build.gradle`:
-
-```gradle
-// filepath: backend/build.gradle
-implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
-```
-
-Y en tu clase principal o configuración:
-
-```java
-// filepath: backend/src/main/java/es/tecnicalman/tecnicalman/TecnicalmanApplication.java
-// No requiere configuración adicional, springdoc lo detecta automáticamente.
-```
+- Mejora en el aspecto de los PDF para igualar el estilo usado actualmente por el cliente.
+- Optimización de la descarga y generación de PDFs.
+- Adición de ordenado y filtrado por categorías en web y móvil.
+- Adición de gráficos para las ganancias mensuales y trimestrales.
+- Mejoras de usabilidad y accesibilidad en la UI web y móvil.
 
 ---
 
-## Frontend
-
-- **Tecnologías:** React, Vite, Axios, Tailwind CSS.
-- **Estructura principal:**
-  - `page/`: Páginas para cada entidad (Clientes, Facturas, Albaranes, Presupuestos, etc.).
-  - `axios/`: Módulos para consumir la API REST del backend.
-  - `components/`: Componentes reutilizables (TopBar, formularios, tablas, etc.).
-
-### Funcionalidades
-
-- CRUD de clientes, facturas, albaranes, presupuestos y tareas.
-- Generación y descarga de PDFs.
-- Autenticación de usuarios.
-- Búsqueda y filtrado.
-
----
-
-## Instalación y Ejecución
+## Características destacadas
 
 ### Backend
 
-1. Configura tu base de datos MySQL y ajusta las credenciales en `application.properties`.
-2. Instala dependencias e inicia el servidor:
-   ```sh
-   cd backend
-   ./gradlew bootRun
-   ```
-3. Accede a la documentación Swagger en [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+- API REST protegida con JWT.
+- **Endpoints principales:**
+    - `/api/auth` (login, validación, recuperación de contraseña)
+    - `/api/clientes`, `/api/facturas`, `/api/albarans`, `/api/presupuestos`, `/api/tareas`
+- Contraseñas encriptadas con BCrypt.
+- Documentación interactiva con Swagger: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+### Frontend Web
+
+- Navegación protegida por login.
+- CRUD completo de todas las entidades.
+- Generación y descarga de PDFs.
+- Búsqueda y filtrado de datos.
+- Diseño moderno con Tailwind CSS.
+
+### App Android
+
+- Login con JWT, persistencia de token con DataStore.
+- CRUD de tareas, clientes, presupuestos, albaranes y facturas.
+- Visualización de calendario con tareas diarias.
+- Descarga de PDFs al almacenamiento externo privado.
+- Soporte de visualizacion completo offline de las tareas del dia.
+- UI moderna con Jetpack Compose y Material 3.
+
+---
+
+## Instalación
+
+### Backend
+
+```bash
+cd backend
+./gradlew bootRun
+```
+Configura previamente tu base de datos en `application.properties`.
 
 ### Frontend
 
-1. Instala las dependencias:
-   ```sh
-   cd frontend
-   npm install
-   ```
-2. Inicia la aplicación:
-   ```sh
-   npm run dev
-   ```
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### [Android](https://github.com/Marc555/TecnicalManMovile)
+
+1. Abre el proyecto en Android Studio.
+2. Asegúrate de tener un dispositivo/emulador con Android 8.0 o superior.
+3. Ejecuta la aplicación.
+
+#### Permisos requeridos (Android)
+
+- `INTERNET`: Acceso a la API.
+- `ACCESS_NETWORK_STATE`: Detección de conectividad.
+- Permisos de almacenamiento para guardar los PDFs.
 
 ---
 
-## Notas
+## Notas adicionales
 
-- El backend expone una API RESTful consumida por el frontend.
-- El proyecto utiliza Lombok, asegúrate de tenerlo habilitado en tu IDE.
-- Para desarrollo, puedes usar Spring Boot DevTools para recarga automática.
-- Swagger genera la documentación automáticamente a partir de los controladores REST.
+- Asegúrate de tener habilitado Lombok en tu IDE para el backend.
+- La sincronización en la app móvil gestiona automáticamente el modo offline/online.
+- Spring Boot DevTools puede usarse para recarga automática en desarrollo.
 
----
-
-**Autor:**  
-TecnicalMan Team
+- ## [Video Comercial](https://drive.google.com/file/d/1GienqLiMsf8Jg4bT0woJAJN5EZGOx1hh/view?usp=sharing)
