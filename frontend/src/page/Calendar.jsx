@@ -67,7 +67,10 @@ const Calendar = () => {
                     direccion: task.direccion,
                     estado: task.estado,
                     start: startDate,
-                    color: task.estado === "COMPLETADA" ? "green" : "blue",
+                    color: task.estado === "COMPLETADA" ? "green" : task.estado === "PENDIENTE"
+                        ? "yellow"
+                        : task.estado === "CANCELADA"
+                            ? "red" : "blue",
                     extendedProps: {
                         hora: startDate.toLocaleTimeString('es-ES', {
                             hour: '2-digit',

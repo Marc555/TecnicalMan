@@ -216,7 +216,6 @@ const PresupuestoForm = () => {
                         className="w-full border border-gray-300 rounded p-2 text-black"
                     >
                         <option value="BORRADOR">Borrador</option>
-                        <option value="ENVIADO">Enviado</option>
                         <option value="ACEPTADO">Aceptado</option>
                         <option value="RECHAZADO">Rechazado</option>
                     </select>

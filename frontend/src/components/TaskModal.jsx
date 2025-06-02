@@ -40,7 +40,9 @@ const TaskModal = ({ date, tasks, onClose, onEditTask, refreshData }) => {
                                             ? 'bg-green-100 text-green-800'
                                             : task.estado === 'PENDIENTE'
                                                 ? 'bg-yellow-100 text-yellow-800'
-                                                : 'bg-blue-100 text-blue-800'
+                                                : task.estado === 'CANCELADA'
+                                                    ? 'bg-red-100 text-red-800'
+                                                    : 'bg-blue-100 text-blue-800'
                                             }`}>
                                             {task.estado}
                                         </span>
