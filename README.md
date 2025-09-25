@@ -1,5 +1,7 @@
 # TecnicalMan
 
+(Projecto Academico)
+
 TecnicalMan es una solución de gestión para empresas disponible como aplicación Android y WebApp. Permite gestionar clientes, tareas, presupuestos, albaranes y facturas, tanto online como offline, con sincronización en red.
 
 ---
